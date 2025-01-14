@@ -5,6 +5,7 @@
 #include <QPlainTextEdit>
 #include <QCoreApplication>
 #include <QtCore/QtCore>
+#include <QSettings>
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
@@ -37,9 +38,8 @@ class Window : public QDialog
     Q_OBJECT
 
   public:
-    Window(QString onedrive_path, QString onedrive_arguments);
-    QString *arguments;
-    QString *path;
+    Window(QSettings* settings);
+    QSettings* settings;
 
   protected:
     void closeEvent(QCloseEvent *event) override;
@@ -58,7 +58,7 @@ class Window : public QDialog
     void createMessageGroupBox();
     void createActions();
     void createTrayIcon();
-    void execute(QString onedrive_path, QString onedrive_arguments);
+    void execute();
     void openFolder();
     void restart();
     void suspend();

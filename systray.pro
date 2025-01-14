@@ -11,7 +11,8 @@ INSTALLS += target
 INSTALLS += unitfile
 
 # Input
-HEADERS += window.h window_1.h iconinfo.h morecolors.h
+HEADERS += window.h window_1.h iconinfo.h morecolors.h \
+    settings.h
 SOURCES += main.cpp window.cpp window_1.cpp iconinfo.cpp morecolors.cpp
 RESOURCES += systray.qrc
 

@@ -21,14 +21,14 @@
 #include <QPixmap>
 #include <iconinfo.h>
 #include <morecolors.h>
+#include <settings.h>
 
-Window::Window(QString onedrive_path, QString onedrive_arguments)
+Window::Window(QSettings* settings)
 // Create the window
 {
     // Copy the program path and the arguments to be used
     // in another parts of the program.
-    arguments = &onedrive_arguments;
-    path = &onedrive_path;
+    this->settings = settings;
 
     ConfigurationWindow = new Window_1;
 
@@ -53,20 +53,27 @@ Window::Window(QString onedrive_path, QString onedrive_arguments)
     if (!appConfig->pos.isNull())
         move(appConfig->pos);
 
-    execute(onedrive_path, onedrive_arguments);
+    execute();
     eventsInfo(tr("OneDrive started"));
 }
 
-void Window::execute(QString onedrive_path, QString onedrive_arguments)
+void Window::execute()
 // Execute the OneDrive service
 {
     process = new QProcess();
 
-    if (onedrive_path.isEmpty())
-	    onedrive_path = QString("onedrive");
+    QString onedrive_path = settings->value(Settings::Onedrive_Path).toString();
+    QString onedrive_arguments = settings->value(Settings::Onedrive_Args).toString();
 
-    if (onedrive_arguments.isEmpty())
+    if (onedrive_path.isEmpty()){
+	    onedrive_path = QString("onedrive");
+        settings->setValue(Settings::Onedrive_Path, onedrive_path);
+    }
+
+    if (onedrive_arguments.isEmpty()){
 	    onedrive_arguments = QString("--verbose --monitor");
+        settings->setValue(Settings::Onedrive_Args, onedrive_arguments);
+    }
 
     qDebug() << "Selected onedrive path: " << onedrive_path;
     qDebug() << "Selected onedrive args: " << onedrive_arguments;
@@ -93,7 +100,7 @@ void Window::openFolder()
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     QStringList arguments01 = arguments->split(" ", QString::SkipEmptyParts);
 #else
-    QStringList arguments01 = arguments->split(QRegularExpression("[ =]"), Qt::SkipEmptyParts);
+    QStringList arguments01 = settings->value(Settings::Onedrive_Args).toString().split(QRegularExpression("[ =]"), Qt::SkipEmptyParts);
 #endif
     int index = arguments01.indexOf("--confdir", 0) + 1;
     if (index > 0){

@@ -7,6 +7,7 @@
 #include <libgen.h>
 #include <window.h>
 #include <iconinfo.h>
+#include <settings.h>
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +35,15 @@ int main(int argc, char *argv[])
 
     QString onedrivePath = parser.value(onedrivePathOption);
     QString onedriveArgs = parser.value(onedriveArgsOption);
+
     bool silent = parser.isSet(silentFailOption);
+
+    // populate application-wide settings container.
+    QSettings applicationSettings("onedrive_tray", "onedrive_tray");
+    applicationSettings.setValue(Settings::SilentFail, silent);
+    applicationSettings.setValue(Settings::Onedrive_Path, onedrivePath);
+    applicationSettings.setValue(Settings::Onedrive_Args, onedriveArgs);
+
 
     // Translator of predefined Qt objects (QColorDialog for example)
     QTranslator qtTranslator;
@@ -50,14 +59,14 @@ int main(int argc, char *argv[])
         qDebug().noquote() << "Translation not found for" << QLocale().languageToString(QLocale().language()) << "language" << QLocale().uiLanguages() << ".";
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-        if (!silent) {
+        if (!applicationSettings.value(Settings::SilentFail).toBool()) {
             QMessageBox::critical(0, QObject::tr("OneDrive"), QObject::tr("I couldn't detect any system tray on this system."));
         }
         return 1;
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
-    Window window(onedrivePath, onedriveArgs);
+    Window window(&applicationSettings);
     return app.exec();
 }
 
