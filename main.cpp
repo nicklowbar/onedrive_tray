@@ -31,19 +31,22 @@ int main(int argc, char *argv[])
     parser.addOption(onedriveArgsOption);
     QCommandLineOption silentFailOption(QStringList() << "s" << "silent-fail", "No error message displayed when no system tray is detected");
     parser.addOption(silentFailOption);
+    QCommandLineOption verboseOnedriveEventOption(QStringList() << "e" << "verbose-onedrive-events", "verbose onedrive event output");
+    parser.addOption(verboseOnedriveEventOption);
     parser.process(app);
 
     QString onedrivePath = parser.value(onedrivePathOption);
     QString onedriveArgs = parser.value(onedriveArgsOption);
 
     bool silent = parser.isSet(silentFailOption);
+    bool verboseOnedriveEvents = parser.isSet(verboseOnedriveEventOption);
 
     // populate application-wide settings container.
     QSettings applicationSettings("onedrive_tray", "onedrive_tray");
     applicationSettings.setValue(Settings::SilentFail, silent);
     applicationSettings.setValue(Settings::Onedrive_Path, onedrivePath);
     applicationSettings.setValue(Settings::Onedrive_Args, onedriveArgs);
-
+    applicationSettings.setValue(Settings::VerboseOnedriveEvents, verboseOnedriveEvents);
 
     // Translator of predefined Qt objects (QColorDialog for example)
     QTranslator qtTranslator;

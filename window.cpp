@@ -213,7 +213,10 @@ void Window::readStdOutput()
         for (int i = 0; i < listLine.size(); i++)
         {
             // For debugging, you can de-comment the line under to see all the messages in the recent events window
-            // eventsInfo(listLine[i]);
+            if(settings->value(Settings::VerboseOnedriveEvents).toBool())
+            {
+                eventsInfo(listLine[i]);
+            }
 
             // Get the free space on OneDrive and update the menu
             if (listLine[i].toLower().contains("remaining free space"))

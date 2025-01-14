@@ -7,6 +7,7 @@ namespace Settings {
 
 const QString Onedrive_Path = "onedrive/path";
 const QString Onedrive_Args = "onedrive/args";
+const QString VerboseOnedriveEvents = "verboseOnedriveEvents";
 const QString SilentFail = "silentFail";
 
 };
