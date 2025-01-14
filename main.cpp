@@ -40,6 +40,11 @@ int main(int argc, char *argv[])
 
     bool silent = parser.isSet(silentFailOption);
     bool verboseOnedriveEvents = parser.isSet(verboseOnedriveEventOption);
+    if (verboseOnedriveEvents)
+    {
+        qDebug() << "Enabling verbose Onedrive Event Logging.";
+    }
+
 
     // populate application-wide settings container.
     QSettings applicationSettings("onedrive_tray", "onedrive_tray");
